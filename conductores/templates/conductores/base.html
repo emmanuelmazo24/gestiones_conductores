@@ -1,0 +1,473 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Gestión de Conductores{% endblock %}</title>
+
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link
+    href="https://fonts.googleapis.com/css2?family=Raleway:wght@600;700;800&family=Nunito:wght@400;500;600;700&display=swap"
+    rel="stylesheet">
+
+  <style>
+    :root {
+      --primary: #1A3A5C;
+      --primary-light: #2E5F8A;
+      --accent: #E8A020;
+      --accent-light: #F5C35A;
+      --bg: #F0F4F8;
+      --surface: #FFFFFF;
+      --text-primary: #1A2733;
+      --text-muted: #5C7A8A;
+      --success: #2E7D4F;
+      --danger: #C0392B;
+      --border: #D6E4EE;
+      --sidebar-w: 260px;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      margin: 0;
+    }
+
+    /* ── SIDEBAR ───────────────────────────────────────── */
+    .sidebar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: var(--sidebar-w);
+      height: 100vh;
+      background: var(--primary);
+      display: flex;
+      flex-direction: column;
+      z-index: 1000;
+      box-shadow: 4px 0 20px rgba(0, 0, 0, .18);
+    }
+
+    .sidebar-brand {
+      padding: 24px 20px 20px;
+      border-bottom: 1px solid rgba(255, 255, 255, .12);
+    }
+
+    .sidebar-brand h1 {
+      font-family: 'Raleway', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 800;
+      color: #fff;
+      margin: 0;
+      line-height: 1.3;
+    }
+
+    .sidebar-brand p {
+      font-size: .72rem;
+      color: rgba(255, 255, 255, .5);
+      margin: 4px 0 0;
+    }
+
+    .sidebar-brand .logo-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 12px;
+      font-size: 1.4rem;
+    }
+
+    .sidebar-nav {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px 12px;
+    }
+
+    .nav-section-label {
+      font-size: .65rem;
+      font-weight: 700;
+      letter-spacing: 1.2px;
+      color: rgba(255, 255, 255, .35);
+      text-transform: uppercase;
+      padding: 14px 8px 6px;
+    }
+
+    .sidebar-nav .nav-link {
+      color: rgba(255, 255, 255, .7);
+      border-radius: 10px;
+      padding: 10px 14px;
+      font-size: .88rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all .2s;
+    }
+
+    .sidebar-nav .nav-link:hover,
+    .sidebar-nav .nav-link.active {
+      background: rgba(255, 255, 255, .12);
+      color: #fff;
+    }
+
+    .sidebar-nav .nav-link .bi {
+      font-size: 1rem;
+    }
+
+    .sidebar-footer {
+      padding: 14px 16px;
+      border-top: 1px solid rgba(255, 255, 255, .1);
+      font-size: .78rem;
+      color: rgba(255, 255, 255, .45);
+    }
+
+    .google-badge {
+      background: rgba(255, 255, 255, .1);
+      border-radius: 8px;
+      padding: 8px 10px;
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .google-badge .dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    .dot-green {
+      background: #2ECC71;
+    }
+
+    .dot-gray {
+      background: #7f8c8d;
+    }
+
+    /* ── MAIN CONTENT ──────────────────────────────────── */
+    .main-wrap {
+      margin-left: var(--sidebar-w);
+      min-height: 100vh;
+    }
+
+    .topbar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 28px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .topbar .page-title {
+      font-family: 'Raleway', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--primary);
+      margin: 0;
+    }
+
+    .content-area {
+      padding: 28px;
+    }
+
+    /* ── CARDS ─────────────────────────────────────────── */
+    .card {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      box-shadow: 0 2px 12px rgba(26, 58, 92, .07);
+    }
+
+    .card-header-custom {
+      background: linear-gradient(135deg, var(--primary), var(--primary-light));
+      color: #fff;
+      border-radius: 16px 16px 0 0;
+      padding: 16px 22px;
+    }
+
+    .stat-card {
+      border-radius: 14px;
+      border: none;
+      padding: 20px;
+      box-shadow: 0 2px 12px rgba(26, 58, 92, .08);
+    }
+
+    .stat-card .stat-num {
+      font-family: 'Raleway', sans-serif;
+      font-size: 2.2rem;
+      font-weight: 800;
+    }
+
+    /* ── TABLE ─────────────────────────────────────────── */
+    .table-hover tbody tr {
+      cursor: pointer;
+      transition: background .15s;
+    }
+
+    .table th {
+      font-size: .78rem;
+      font-weight: 700;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      background: var(--bg);
+      border-bottom: 2px solid var(--border);
+    }
+
+    /* ── BADGES ────────────────────────────────────────── */
+    .badge-grupo {
+      font-size: .72rem;
+      font-weight: 700;
+      border-radius: 20px;
+      padding: 4px 10px;
+    }
+
+    .bg-grupo-sin_asignar {
+      background: #95a5a6;
+      color: #fff;
+    }
+
+    .bg-grupo-grupo_a {
+      background: #3498DB;
+      color: #fff;
+    }
+
+    .bg-grupo-grupo_b {
+      background: #2ECC71;
+      color: #fff;
+    }
+
+    .bg-grupo-grupo_c {
+      background: #E74C3C;
+      color: #fff;
+    }
+
+    .bg-grupo-grupo_d {
+      background: #F39C12;
+      color: #fff;
+    }
+
+    .bg-grupo-grupo_e {
+      background: #9B59B6;
+      color: #fff;
+    }
+
+    .bg-grupo-especial {
+      background: #1ABC9C;
+      color: #fff;
+    }
+
+    .bg-grupo-espera {
+      background: #E67E22;
+      color: #fff;
+    }
+
+    /* ── FORMS ─────────────────────────────────────────── */
+    .form-control,
+    .form-select {
+      border-radius: 10px;
+      border: 1.5px solid var(--border);
+      font-size: .9rem;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+      border-color: var(--primary-light);
+      box-shadow: 0 0 0 3px rgba(46, 95, 138, .15);
+    }
+
+    .form-label {
+      font-weight: 600;
+      font-size: .85rem;
+      color: var(--text-muted);
+    }
+
+    .section-title {
+      font-family: 'Raleway', sans-serif;
+      font-size: .9rem;
+      font-weight: 700;
+      color: var(--primary);
+      border-left: 3px solid var(--accent);
+      padding-left: 10px;
+      margin-bottom: 16px;
+    }
+
+    /* ── BUTTONS ───────────────────────────────────────── */
+    .btn-primary {
+      background: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-light);
+      border-color: var(--primary-light);
+    }
+
+    .btn-accent {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #fff;
+    }
+
+    .btn-accent:hover {
+      background: var(--accent-light);
+      border-color: var(--accent-light);
+      color: #fff;
+    }
+
+    .btn {
+      border-radius: 10px;
+      font-weight: 700;
+    }
+
+    /* ── ALERTS ────────────────────────────────────────── */
+    .alert {
+      border-radius: 12px;
+      font-size: .9rem;
+    }
+
+    /* ── AVATAR ────────────────────────────────────────── */
+    .avatar-circle {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(26, 58, 92, .1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Raleway', sans-serif;
+      font-weight: 800;
+      font-size: .95rem;
+      color: var(--primary);
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 0;
+        overflow: hidden;
+      }
+
+      .main-wrap {
+        margin-left: 0;
+      }
+    }
+  </style>
+  {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+
+  <!-- SIDEBAR -->
+  <nav class="sidebar">
+    <div class="sidebar-brand">
+      <div class="logo-icon"><img src="{% static 'conductores/espirito.png' %}" alt="Simbolo"
+          style="max-width: 100%; max-height: 100%;"></div>
+      <h1>Pascua Joven<br>2026</h1>
+      <p>Parroquia San Pio X</p>
+    </div>
+
+    <div class="sidebar-nav">
+      <div class="nav-section-label">Principal</div>
+      <a href="{% url 'conductores:lista' %}"
+        class="nav-link {% if request.resolver_match.url_name == 'lista' %}active{% endif %}">
+        <i class="bi bi-people-fill"></i> Lista de participantes
+      </a>
+      <a href="{% url 'conductores:crear' %}"
+        class="nav-link {% if request.resolver_match.url_name == 'crear' %}active{% endif %}">
+        <i class="bi bi-person-plus-fill"></i> Agregar participante
+      </a>
+
+      <div class="nav-section-label">Datos locales</div>
+      <a href="{% url 'conductores:exportar_excel' %}" class="nav-link">
+        <i class="bi bi-file-earmark-excel-fill"></i> Exportar a Excel
+      </a>
+      <a href="{% url 'conductores:importar_excel' %}"
+        class="nav-link {% if request.resolver_match.url_name == 'importar_excel' %}active{% endif %}">
+        <i class="bi bi-upload"></i> Importar desde Excel
+      </a>
+
+      <div class="nav-section-label">Google Drive</div>
+      {% if google_auth %}
+      <a href="{% url 'conductores:exportar_sheets' %}" class="nav-link">
+        <i class="bi bi-cloud-upload-fill"></i> Exportar a Sheets
+      </a>
+      <a href="{% url 'conductores:importar_sheets' %}" class="nav-link">
+        <i class="bi bi-cloud-download-fill"></i> Importar de Sheets
+      </a>
+      <a href="{% url 'conductores:google_logout' %}" class="nav-link text-danger">
+        <i class="bi bi-box-arrow-right"></i> Desconectar Google
+      </a>
+      {% else %}
+      <a href="{% url 'conductores:google_auth' %}" class="nav-link">
+        <i class="bi bi-google"></i> Conectar con Google
+      </a>
+      {% endif %}
+
+      <div class="nav-section-label">Sistema</div>
+      <a href="/admin/" class="nav-link" target="_blank">
+        <i class="bi bi-gear-fill"></i> Panel de admin
+      </a>
+    </div>
+
+    <div class="sidebar-footer">
+      {% if google_auth %}
+      <div class="google-badge">
+        <span class="dot dot-green"></span>
+        <span>{{ google_email|truncatechars:28 }}</span>
+      </div>
+      {% else %}
+      <div class="google-badge">
+        <span class="dot dot-gray"></span>
+        <span>Google no conectado</span>
+      </div>
+      {% endif %}
+      <span>Base de datos local SQLite</span>
+    </div>
+  </nav>
+
+  <!-- MAIN -->
+  <div class="main-wrap">
+    <div class="topbar">
+      <h2 class="page-title">{% block page_title %}Inicio{% endblock %}</h2>
+      <div class="d-flex gap-2">
+        <a href="{% url 'conductores:crear' %}" class="btn btn-primary btn-sm">
+          <i class="bi bi-plus-lg me-1"></i>Nuevo participante
+        </a>
+      </div>
+    </div>
+
+    <div class="content-area">
+      {% for msg in messages %}
+      <div
+        class="alert alert-{% if msg.tags == 'error' %}danger{% elif msg.tags == 'warning' %}warning{% elif msg.tags == 'success' %}success{% else %}info{% endif %} alert-dismissible fade show"
+        role="alert">
+        {{ msg }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+      </div>
+      {% endfor %}
+
+      {% block content %}{% endblock %}
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+
+</html>

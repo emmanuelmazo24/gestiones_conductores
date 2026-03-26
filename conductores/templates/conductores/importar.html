@@ -1,0 +1,44 @@
+{% extends "conductores/base.html" %}
+{% block title %}Importar Excel{% endblock %}
+{% block page_title %}Importar desde Excel{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-7">
+
+    <div class="card mb-4">
+      <div class="card-body p-4">
+        <div class="section-title">Subir archivo Excel</div>
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="mb-4">
+            {{ form.archivo }}
+            <div class="form-text mt-2">
+              El archivo debe tener el mismo formato que la exportación de esta app.<br>
+              <strong>Columnas esperadas:</strong> ID, Nombre, Apellido, Edad, Dirección, Nombre Padres,
+              Contacto, Comunidad, Dificultades, Fecha Recepción, Grupo.
+            </div>
+          </div>
+          <div class="d-flex gap-2">
+            <a href="{% url 'conductores:lista' %}" class="btn btn-outline-secondary">Cancelar</a>
+            <button type="submit" class="btn btn-primary">
+              <i class="bi bi-upload me-2"></i>Importar
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body p-4">
+        <div class="section-title">¿No tenés un archivo para importar?</div>
+        <p class="text-muted">Primero exporta los datos actuales para obtener la plantilla correcta.</p>
+        <a href="{% url 'conductores:exportar_excel' %}" class="btn btn-sm" style="background:#217346;color:#fff;">
+          <i class="bi bi-file-earmark-excel-fill me-1"></i>Descargar Excel con datos actuales
+        </a>
+      </div>
+    </div>
+
+  </div>
+</div>
+{% endblock %}

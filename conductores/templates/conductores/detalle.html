@@ -1,0 +1,158 @@
+{% extends "conductores/base.html" %}
+{% block title %}{{ conductor.nombre_completo }}{% endblock %}
+{% block page_title %}Detalle del Conductor{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+
+  <!-- LEFT PANEL -->
+  <div class="col-lg-4">
+    <div class="card">
+      <div style="background:linear-gradient(135deg,var(--primary),var(--primary-light));border-radius:16px 16px 0 0;padding:32px 20px;text-align:center;">
+        <div style="width:80px;height:80px;border-radius:50%;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:2rem;font-family:'Raleway',sans-serif;font-weight:800;color:#fff;margin:0 auto 14px;">
+          {{ conductor.nombre.0 }}{{ conductor.apellido.0 }}
+        </div>
+        <h4 style="font-family:'Raleway',sans-serif;font-weight:800;color:#fff;margin:0;">{{ conductor.nombre_completo }}</h4>
+        <div class="mt-2">
+          <span class="badge badge-grupo bg-grupo-{{ conductor.grupo }}">{{ conductor.grupo_display }}</span>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="d-flex flex-column gap-2">
+          <a href="{% url 'conductores:editar' conductor.pk %}" class="btn btn-primary">
+            <i class="bi bi-pencil-fill me-2"></i>Editar datos
+          </a>
+          <!-- CAMBIAR GRUPO -->
+          <button class="btn btn-accent" data-bs-toggle="modal" data-bs-target="#modalGrupo">
+            <i class="bi bi-people-fill me-2"></i>Cambiar grupo
+          </button>
+          <form method="post" action="{% url 'conductores:eliminar' conductor.pk %}"
+                onsubmit="return confirm('¿Eliminar a {{ conductor.nombre_completo }}?')">
+            {% csrf_token %}
+            <button class="btn btn-outline-danger w-100">
+              <i class="bi bi-trash-fill me-2"></i>Eliminar
+            </button>
+          </form>
+        </div>
+        <hr>
+        <small class="text-muted">
+          <i class="bi bi-clock me-1"></i>
+          Registrado: {{ conductor.creado_en|date:"d/m/Y H:i" }}<br>
+          <i class="bi bi-arrow-clockwise me-1"></i>
+          Actualizado: {{ conductor.actualizado_en|date:"d/m/Y H:i" }}
+        </small>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="col-lg-8">
+
+    <div class="card mb-3">
+      <div class="card-body p-4">
+        <div class="section-title">Información personal</div>
+        <div class="row g-3">
+          <div class="col-sm-4">
+            <div class="text-muted" style="font-size:.78rem;font-weight:700;text-transform:uppercase;">Edad</div>
+            <div style="font-size:1.1rem;font-weight:700;">{{ conductor.edad }} años</div>
+          </div>
+          <div class="col-sm-4">
+            <div class="text-muted" style="font-size:.78rem;font-weight:700;text-transform:uppercase;">Fecha recepción</div>
+            <div style="font-size:1.1rem;font-weight:700;">{{ conductor.fecha_recepcion|date:"d/m/Y" }}</div>
+          </div>
+          <div class="col-sm-4">
+            <div class="text-muted" style="font-size:.78rem;font-weight:700;text-transform:uppercase;">Comunidad</div>
+            <div style="font-size:1.1rem;font-weight:700;">{{ conductor.comunidad }}</div>
+          </div>
+          <div class="col-12">
+            <div class="text-muted" style="font-size:.78rem;font-weight:700;text-transform:uppercase;">Dirección</div>
+            <div>{{ conductor.direccion }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mb-3">
+      <div class="card-body p-4">
+        <div class="section-title">Familia y contacto</div>
+        <div class="row g-3">
+          <div class="col-sm-7">
+            <div class="text-muted" style="font-size:.78rem;font-weight:700;text-transform:uppercase;">Padres / Tutores</div>
+            <div style="font-weight:600;">{{ conductor.nombre_padres }}</div>
+          </div>
+          <div class="col-sm-5">
+            <div class="text-muted" style="font-size:.78rem;font-weight:700;text-transform:uppercase;">Contacto adulto</div>
+            <div style="font-weight:600;">
+              <a href="tel:{{ conductor.numero_contacto_adulto }}" class="text-decoration-none">
+                <i class="bi bi-telephone-fill me-1 text-primary"></i>{{ conductor.numero_contacto_adulto }}
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-body p-4">
+        <div class="section-title">Dificultades / necesidades especiales</div>
+        {% if conductor.dificultades %}
+          <p style="white-space:pre-wrap;margin:0;">{{ conductor.dificultades }}</p>
+        {% else %}
+          <p class="text-muted mb-0">No se registraron dificultades.</p>
+        {% endif %}
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODAL CAMBIAR GRUPO -->
+<div class="modal fade" id="modalGrupo" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border-radius:16px;border:none;">
+      <div class="modal-header" style="background:var(--primary);border-radius:16px 16px 0 0;">
+        <h5 class="modal-title text-white" style="font-family:'Raleway',sans-serif;font-weight:700;">
+          <i class="bi bi-people-fill me-2"></i>Cambiar grupo
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <form method="post" action="{% url 'conductores:cambiar_grupo' conductor.pk %}">
+        {% csrf_token %}
+        <div class="modal-body p-4">
+          <p class="text-muted mb-3">Selecciona el grupo para <strong>{{ conductor.nombre_completo }}</strong>:</p>
+          <div class="d-flex flex-wrap gap-2">
+            {% for val, label in grupos %}
+            <div class="form-check d-none" id="opt-{{ val }}"></div>
+            <button type="button" class="btn btn-sm grupo-btn bg-grupo-{{ val }}"
+                    data-val="{{ val }}"
+                    style="border:3px solid transparent;{% if conductor.grupo == val %}outline:2px solid #fff;box-shadow:0 0 0 3px var(--primary);{% endif %}">
+              {{ label }}
+            </button>
+            {% endfor %}
+          </div>
+          <input type="hidden" name="grupo" id="grupo-input" value="{{ conductor.grupo }}">
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-primary">
+            <i class="bi bi-save-fill me-1"></i>Guardar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.querySelectorAll('.grupo-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.grupo-btn').forEach(b =>
+      b.style.boxShadow = 'none');
+    btn.style.boxShadow = '0 0 0 3px var(--primary)';
+    document.getElementById('grupo-input').value = btn.dataset.val;
+  });
+});
+</script>
+{% endblock %}

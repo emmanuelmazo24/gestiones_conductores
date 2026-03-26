@@ -1,0 +1,102 @@
+{% extends "conductores/base.html" %}
+{% block title %}{{ titulo }}{% endblock %}
+{% block page_title %}{{ titulo }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-lg-9">
+    <form method="post" novalidate>
+      {% csrf_token %}
+
+      <!-- DATOS PERSONALES -->
+      <div class="card mb-4">
+        <div class="card-body p-4">
+          <div class="section-title">Datos personales</div>
+          <div class="row g-3">
+            <div class="col-md-5">
+              <label class="form-label">Nombre *</label>
+              {{ form.nombre }}
+              {% if form.nombre.errors %}<div class="text-danger small mt-1">{{ form.nombre.errors.0 }}</div>{% endif %}
+            </div>
+            <div class="col-md-5">
+              <label class="form-label">Apellido *</label>
+              {{ form.apellido }}
+              {% if form.apellido.errors %}<div class="text-danger small mt-1">{{ form.apellido.errors.0 }}</div>{% endif %}
+            </div>
+            <div class="col-md-2">
+              <label class="form-label">Edad *</label>
+              {{ form.edad }}
+              {% if form.edad.errors %}<div class="text-danger small mt-1">{{ form.edad.errors.0 }}</div>{% endif %}
+            </div>
+            <div class="col-12">
+              <label class="form-label">Dirección *</label>
+              {{ form.direccion }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FAMILIA Y CONTACTO -->
+      <div class="card mb-4">
+        <div class="card-body p-4">
+          <div class="section-title">Familia y contacto</div>
+          <div class="row g-3">
+            <div class="col-md-7">
+              <label class="form-label">Nombre de los padres / tutores *</label>
+              {{ form.nombre_padres }}
+            </div>
+            <div class="col-md-5">
+              <label class="form-label">Número de contacto adulto *</label>
+              {{ form.numero_contacto_adulto }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- COMUNIDAD -->
+      <div class="card mb-4">
+        <div class="card-body p-4">
+          <div class="section-title">Comunidad y dificultades</div>
+          <div class="row g-3">
+            <div class="col-md-6">
+              <label class="form-label">Comunidad *</label>
+              {{ form.comunidad }}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Fecha de recepción *</label>
+              {{ form.fecha_recepcion }}
+            </div>
+            <div class="col-12">
+              <label class="form-label">Dificultades / necesidades especiales</label>
+              {{ form.dificultades }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- GRUPO -->
+      <div class="card mb-4">
+        <div class="card-body p-4">
+          <div class="section-title">Asignación de grupo</div>
+          <div class="row">
+            <div class="col-md-4">
+              <label class="form-label">Grupo</label>
+              {{ form.grupo }}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ACTIONS -->
+      <div class="d-flex gap-2 justify-content-end">
+        <a href="{% if conductor %}{% url 'conductores:detalle' conductor.pk %}{% else %}{% url 'conductores:lista' %}{% endif %}"
+           class="btn btn-outline-secondary px-4">Cancelar</a>
+        <button type="submit" class="btn btn-primary px-5">
+          <i class="bi bi-save-fill me-2"></i>
+          {% if conductor %}Actualizar{% else %}Registrar{% endif %}
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
