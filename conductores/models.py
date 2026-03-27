@@ -4,13 +4,15 @@ from django.utils import timezone
 
 GRUPOS = [
     ('sin_asignar', 'Sin asignar'),
-    ('grupo_a',     'Grupo A'),
-    ('grupo_b',     'Grupo B'),
-    ('grupo_c',     'Grupo C'),
-    ('grupo_d',     'Grupo D'),
-    ('grupo_e',     'Grupo E'),
-    ('especial',    'Grupo Especial'),
-    ('espera',      'En espera'),
+    ('grupo_a',     'Santa Teresita del Niño Jesús'),
+    ('grupo_b',     'San Carlo Acutis'),
+    ('grupo_c',     'San Pier Giorgio'),
+    ('grupo_d',     'San Domingo Savio'),
+    ('grupo_e',     'Beata Chiara Luce Badano'),
+    ('grupo_f',    'Sierva de Dios Clare Crockett'),
+    ('grupo_g',      'Beato Rolando Rivi'),
+    ('grupo_h',      'Siervo de Dios Marcelo Câmara'),
+    ('grupo_i',      'San Luis Gonzaga'),
 ]
 
 
@@ -19,6 +21,7 @@ class Conductor(models.Model):
     nombre                 = models.CharField('Nombre',          max_length=100)
     apellido               = models.CharField('Apellido',        max_length=100)
     edad                   = models.PositiveSmallIntegerField('Edad')
+    cedula                 = models.CharField('Cedula',          max_length=20,null=True,blank=True)
     direccion              = models.TextField('Dirección')
 
     # Familia y contacto

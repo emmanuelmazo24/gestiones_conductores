@@ -408,7 +408,7 @@
         class="nav-link {% if 'hoja_publica' in request.resolver_match.url_name %}active{% endif %}">
         <i class="bi bi-globe2"></i> Importar hoja pública
       </a>
-
+      {% if user.is_authenticated %}
       <div class="nav-section-label">Google Drive</div>
       {% if google_auth %}
       <a href="{% url 'conductores:exportar_sheets' %}" class="nav-link">
@@ -425,7 +425,7 @@
         <i class="bi bi-google"></i> Conectar con Google
       </a>
       {% endif %}
-
+      {% endif %}
       <div class="nav-section-label">Sistema</div>
       <a href="/admin/" class="nav-link" target="_blank">
         <i class="bi bi-gear-fill"></i> Panel de admin

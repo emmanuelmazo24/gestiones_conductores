@@ -52,17 +52,18 @@ def extraer_gid_desde_url(url: str) -> str:
 COLUMN_MAP = {
     'nombre':                 ['nombre', 'name', 'first name', 'primer nombre'],
     'apellido':               ['apellido', 'lastname', 'last name', 'surname', 'segundo nombre'],
+    'cedula':                 ['cedula', 'cedula', 'dni', 'documento', 'documento de identidad', 'documento identidad'],
     'edad':                   ['edad', 'age', 'años'],
     'direccion':              ['direccion', 'dirección', 'address', 'domicilio'],
     'nombre_padres':          ['nombre_padres', 'padres', 'tutores', 'nombre padres',
-                               'nombre de los padres', 'padre/madre', 'parents'],
+                               'nombre de los padres', 'padre/madre', 'parents','Nombre Padres/Tutores'],
     'numero_contacto_adulto': ['numero_contacto_adulto', 'contacto', 'telefono', 'teléfono',
-                               'número contacto', 'numero contacto', 'phone', 'contact'],
+                               'número contacto', 'numero contacto', 'phone', 'contact','Contacto Adulto'],
     'comunidad':              ['comunidad', 'community', 'barrio', 'localidad', 'zona'],
     'dificultades':           ['dificultades', 'difficulties', 'necesidades', 'observaciones',
                                'notas', 'notes', 'remarks'],
     'fecha_recepcion':        ['fecha_recepcion', 'fecha recepcion', 'fecha de recepción',
-                               'fecha', 'date', 'reception date', 'fecha ingreso'],
+                               'fecha', 'date', 'reception date', 'fecha ingreso','Fecha Recepción'],
     'grupo':                  ['grupo', 'group', 'equipo', 'team', 'clase'],
 }
 
