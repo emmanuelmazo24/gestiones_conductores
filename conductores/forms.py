@@ -4,20 +4,21 @@ from .models import Conductor, GRUPOS
 
 class ConductorForm(forms.ModelForm):
     fecha_recepcion = forms.DateField(
-        widget=forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+        widget=forms.DateInput(format='%Y-%m-%d', attrs={'type': 'date', 'class': 'form-control'}),
         label='Fecha de recepción',
     )
 
     class Meta:
         model  = Conductor
         fields = [
-            'nombre', 'apellido', 'edad', 'direccion',
+            'nombre', 'apellido', 'cedula', 'edad', 'direccion',
             'nombre_padres', 'numero_contacto_adulto',
             'comunidad', 'dificultades', 'fecha_recepcion', 'grupo',
         ]
         widgets = {
             'nombre':                 forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nombre'}),
             'apellido':               forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Apellido'}),
+            'cedula':                 forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Cedula'}),
             'edad':                   forms.NumberInput(attrs={'class': 'form-control', 'min': 1, 'max': 120}),
             'direccion':              forms.Textarea(attrs={'class': 'form-control', 'rows': 2}),
             'nombre_padres':          forms.TextInput(attrs={'class': 'form-control'}),

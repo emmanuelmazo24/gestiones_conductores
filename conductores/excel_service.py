@@ -81,7 +81,7 @@ def exportar_excel(conductores_qs):
         ws.row_dimensions[row_idx].height = 22
 
     # ── ANCHOS DE COLUMNAS ───────────────────────────────────────────────
-    col_widths = [8, 18, 18, 8, 32, 30, 18, 20, 40, 16, 16, 18]
+    col_widths = [8, 18, 18, 10, 8, 32, 30, 18, 20, 40, 16, 16, 18]
     for idx, width in enumerate(col_widths, start=1):
         ws.column_dimensions[get_column_letter(idx)].width = width
 

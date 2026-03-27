@@ -74,8 +74,10 @@ GRUPOS_REVERSE = {
     'grupo c': 'grupo_c', 'grupo_c': 'grupo_c', 'c': 'grupo_c',
     'grupo d': 'grupo_d', 'grupo_d': 'grupo_d', 'd': 'grupo_d',
     'grupo e': 'grupo_e', 'grupo_e': 'grupo_e', 'e': 'grupo_e',
-    'especial': 'especial', 'grupo especial': 'especial',
-    'espera': 'espera', 'en espera': 'espera',
+    'grupo f': 'grupo_f', 'grupo_f': 'grupo_f', 'f': 'grupo_f',
+    'grupo g': 'grupo_g', 'grupo_g': 'grupo_g', 'g': 'grupo_g',
+    'grupo h': 'grupo_h', 'grupo_h': 'grupo_h', 'h': 'grupo_h',
+    'grupo i': 'grupo_i', 'grupo_i': 'grupo_i', 'i': 'grupo_i',       
 }
 
 
@@ -120,6 +122,7 @@ def _row_to_dict(row: list, mapping: dict, raw_headers: list) -> dict:
     return {
         'nombre':                 get('nombre'),
         'apellido':               get('apellido'),
+        'cedula':                 get('cedula'),
         'edad':                   int(get('edad') or 0) if get('edad').isdigit() else 0,
         'direccion':              get('direccion'),
         'nombre_padres':          get('nombre_padres'),

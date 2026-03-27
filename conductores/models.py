@@ -65,6 +65,7 @@ class Conductor(models.Model):
             self.pk,
             self.nombre,
             self.apellido,
+            self.cedula,
             self.edad,
             self.direccion,
             self.nombre_padres,
@@ -79,7 +80,7 @@ class Conductor(models.Model):
     @classmethod
     def headers(cls):
         return [
-            'ID', 'Nombre', 'Apellido', 'Edad', 'Dirección',
+            'ID', 'Nombre', 'Apellido', 'Cedula', 'Edad', 'Dirección',
             'Nombre Padres/Tutores', 'Contacto Adulto', 'Comunidad',
             'Dificultades', 'Fecha Recepción', 'Grupo', 'Registrado en',
         ]

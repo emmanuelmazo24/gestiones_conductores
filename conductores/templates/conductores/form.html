@@ -24,6 +24,11 @@
               {% if form.apellido.errors %}<div class="text-danger small mt-1">{{ form.apellido.errors.0 }}</div>{% endif %}
             </div>
             <div class="col-md-2">
+              <label class="form-label">Cedula *</label>
+              {{ form.cedula }}
+              {% if form.cedula.errors %}<div class="text-danger small mt-1">{{ form.cedula.errors.0 }}</div>{% endif %}
+            </div>
+            <div class="col-md-2">
               <label class="form-label">Edad *</label>
               {{ form.edad }}
               {% if form.edad.errors %}<div class="text-danger small mt-1">{{ form.edad.errors.0 }}</div>{% endif %}
@@ -90,7 +95,7 @@
       <!-- ACTIONS -->
       <div class="d-flex gap-2 justify-content-end">
         <a href="{% if conductor %}{% url 'conductores:detalle' conductor.pk %}{% else %}{% url 'conductores:lista' %}{% endif %}"
-           class="btn btn-outline-secondary px-4">Cancelar</a>
+          class="btn btn-outline-secondary px-4">Cancelar</a>
         <button type="submit" class="btn btn-primary px-5">
           <i class="bi bi-save-fill me-2"></i>
           {% if conductor %}Actualizar{% else %}Registrar{% endif %}
