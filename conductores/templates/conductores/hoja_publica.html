@@ -1,0 +1,231 @@
+{% extends "conductores/base.html" %}
+{% load conductores_extras %}
+{% block title %}Importar desde Hoja Pública{% endblock %}
+{% block page_title %}Importar desde Google Sheets pública{% endblock %}
+
+{% block extra_css %}
+<style>
+    .method-card {
+        border: 2px solid var(--border);
+        border-radius: 14px;
+        padding: 20px;
+        cursor: default;
+        transition: border-color .2s, box-shadow .2s;
+        height: 100%;
+    }
+
+    .method-card:hover {
+        border-color: var(--primary-light);
+        box-shadow: 0 4px 16px rgba(26, 58, 92, .1);
+    }
+
+    .method-icon {
+        font-size: 2.2rem;
+        margin-bottom: 10px;
+    }
+
+    .step-bubble {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background: var(--primary);
+        color: #fff;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: .85rem;
+        flex-shrink: 0;
+    }
+
+    .how-step {
+        display: flex;
+        align-items: flex-start;
+        gap: 12px;
+        margin-bottom: 14px;
+    }
+
+    .how-step p {
+        margin: 0;
+        font-size: .88rem;
+    }
+
+    .how-step strong {
+        font-size: .93rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+
+    <!-- LEFT: formulario -->
+    <div class="col-lg-7">
+        <div class="card">
+            <div class="card-header-custom">
+                <span style="font-family:'Raleway',sans-serif;font-weight:700;font-size:1.05rem;">
+                    <i class="bi bi-cloud-download-fill me-2"></i>Conectar con hoja pública
+                </span>
+            </div>
+            <div class="card-body p-4">
+
+                {% if messages %}
+                {% for msg in messages %}
+                <div class="alert alert-{{ msg.tags|default:'info' }} alert-dismissible fade show">
+                    {{ msg }}<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+                {% endfor %}
+                {% endif %}
+
+                <form method="post">
+                    {% csrf_token %}
+
+                    <!-- URL -->
+                    <div class="mb-4">
+                        <label class="form-label fw-bold">
+                            <i class="bi bi-link-45deg me-1 text-primary"></i>
+                            URL de la hoja de Google Sheets *
+                        </label>
+                        {{ form.url_hoja }}
+                        <div class="form-text">{{ form.url_hoja.help_text }}</div>
+                        {% if form.url_hoja.errors %}
+                        <div class="text-danger small mt-1">{{ form.url_hoja.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Separador opcional -->
+                    <details class="mb-4">
+                        <summary style="cursor:pointer;font-weight:700;font-size:.9rem;color:var(--text-muted);">
+                            <i class="bi bi-gear me-1"></i> Opciones avanzadas (API Key)
+                        </summary>
+                        <div class="mt-3 p-3" style="background:var(--bg);border-radius:10px;">
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">{{ form.api_key.label }}</label>
+                                {{ form.api_key }}
+                                <div class="form-text">{{ form.api_key.help_text }}</div>
+                            </div>
+                            <div>
+                                <label class="form-label fw-bold">{{ form.rango.label }}</label>
+                                {{ form.rango }}
+                                <div class="form-text">Ejemplo: <code>A:Z</code> o <code>Hoja1!A1:M200</code></div>
+                            </div>
+                        </div>
+                    </details>
+
+                    <div class="d-flex gap-2">
+                        <a href="{% url 'conductores:lista' %}" class="btn btn-outline-secondary px-4">Cancelar</a>
+                        <button type="submit" class="btn btn-primary px-5">
+                            <i class="bi bi-cloud-download me-2"></i>Extraer datos
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Métodos disponibles -->
+        <div class="row g-3 mt-1">
+            <div class="col-sm-6">
+                <div class="method-card">
+                    <div class="method-icon">📄</div>
+                    <h6 style="font-family:'Raleway',sans-serif;font-weight:700;">Método CSV</h6>
+                    <p class="text-muted" style="font-size:.83rem;margin:0;">
+                        Sin ninguna credencial. Solo necesita que la hoja sea pública.
+                        Rápido y directo.
+                    </p>
+                    <div class="mt-2">
+                        <span class="badge bg-success">Sin API Key</span>
+                        <span class="badge bg-primary ms-1">Automático</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6">
+                <div class="method-card">
+                    <div class="method-icon">🔑</div>
+                    <h6 style="font-family:'Raleway',sans-serif;font-weight:700;">Sheets API v4</h6>
+                    <p class="text-muted" style="font-size:.83rem;margin:0;">
+                        Con API Key pública de Google Cloud. Permite elegir rango y
+                        es más robusto para hojas grandes.
+                    </p>
+                    <div class="mt-2">
+                        <span class="badge bg-warning text-dark">Requiere API Key</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- RIGHT: instrucciones -->
+    <div class="col-lg-5">
+
+        <!-- Cómo publicar la hoja -->
+        <div class="card mb-3">
+            <div class="card-body p-4">
+                <h6 style="font-family:'Raleway',sans-serif;font-weight:700;color:var(--primary);">
+                    <i class="bi bi-question-circle me-2"></i>¿Cómo hacer pública la hoja?
+                </h6>
+                <div class="how-step">
+                    <span class="step-bubble">1</span>
+                    <div><strong>Abrí la hoja</strong>
+                        <p>En Google Sheets hacé clic en <em>Compartir</em></p>
+                    </div>
+                </div>
+                <div class="how-step">
+                    <span class="step-bubble">2</span>
+                    <div><strong>Acceso general</strong>
+                        <p>Cambiá a <em>"Cualquier usuario con el enlace"</em></p>
+                    </div>
+                </div>
+                <div class="how-step">
+                    <span class="step-bubble">3</span>
+                    <div><strong>Rol: Lector</strong>
+                        <p>Asegurate de que el rol sea <em>Lector</em> (no Editor)</p>
+                    </div>
+                </div>
+                <div class="how-step">
+                    <span class="step-bubble">4</span>
+                    <div><strong>Copiar enlace</strong>
+                        <p>Pegá la URL completa en el campo de arriba</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Columnas reconocidas -->
+        <div class="card mb-3">
+            <div class="card-body p-4">
+                <h6 style="font-family:'Raleway',sans-serif;font-weight:700;color:var(--primary);">
+                    <i class="bi bi-table me-2"></i>Columnas reconocidas automáticamente
+                </h6>
+                <p class="text-muted" style="font-size:.82rem;">
+                    El sistema mapea columnas por nombre (sin importar mayúsculas o acentos):
+                </p>
+                <div class="d-flex flex-wrap gap-1">
+                    {% for col in "Nombre,Apellido,Edad,Dirección,NombrePadres,Contacto,Comunidad,Dificultades,FechaRecepción,Grupo"|split:"," %}
+                    <span class="badge bg-light text-dark border" style="font-size:.75rem;">{{ col }}</span>
+                    {% endfor %}
+                </div>
+                <p class="text-muted mt-2 mb-0" style="font-size:.78rem;">
+                    Las columnas que no coincidan se mostrarán en la previsualización pero no se importarán.
+                </p>
+            </div>
+        </div>
+
+        <!-- API Key -->
+        <div class="card">
+            <div class="card-body p-4">
+                <h6 style="font-family:'Raleway',sans-serif;font-weight:700;color:var(--primary);">
+                    <i class="bi bi-key me-2"></i>¿Cómo obtener una API Key? (opcional)
+                </h6>
+                <ol style="font-size:.83rem;color:var(--text-muted);padding-left:18px;">
+                    <li>Ir a <a href="https://console.cloud.google.com" target="_blank">Google Cloud Console</a></li>
+                    <li>Activar <strong>Google Sheets API</strong></li>
+                    <li>Crear credencial → <strong>Clave de API</strong></li>
+                    <li>Restringir al servicio <em>Sheets API</em> (recomendado)</li>
+                    <li>Pegar la clave en el campo "Opciones avanzadas"</li>
+                </ol>
+            </div>
+        </div>
+
+    </div>
+</div>
+{% endblock %}

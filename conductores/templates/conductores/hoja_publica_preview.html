@@ -1,0 +1,215 @@
+{% extends "conductores/base.html" %}
+{% load conductores_extras %}
+{% block title %}Previsualización — Importar desde Hoja Pública{% endblock %}
+{% block page_title %}Previsualización de datos{% endblock %}
+
+{% block extra_css %}
+<style>
+    .field-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: .75rem;
+        font-weight: 700;
+    }
+
+    .chip-ok {
+        background: rgba(46, 125, 79, .12);
+        color: #2E7D4F;
+        border: 1px solid rgba(46, 125, 79, .3);
+    }
+
+    .chip-missing {
+        background: rgba(192, 57, 43, .08);
+        color: #C0392B;
+        border: 1px solid rgba(192, 57, 43, .25);
+    }
+
+    .chip-extra {
+        background: rgba(92, 122, 138, .1);
+        color: var(--text-muted);
+        border: 1px solid var(--border);
+    }
+
+    .preview-table th {
+        font-size: .72rem;
+        white-space: nowrap;
+    }
+
+    .preview-table td {
+        font-size: .82rem;
+        max-width: 180px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .metodo-badge {
+        border-radius: 8px;
+        padding: 6px 14px;
+        font-weight: 700;
+        font-size: .82rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+<!-- CABECERA DE RESULTADO -->
+<div class="card mb-4">
+    <div class="card-body p-4">
+        <div class="row align-items-center g-3">
+            <div class="col-auto">
+                <div
+                    style="width:64px;height:64px;background:rgba(46,125,79,.1);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:2rem;">
+                    ✅</div>
+            </div>
+            <div class="col">
+                <h5 style="font-family:'Raleway',sans-serif;font-weight:800;margin:0;">
+                    {{ preview.total }} fila(s) extraída(s) correctamente
+                </h5>
+                <div class="d-flex flex-wrap gap-2 mt-1">
+                    <span
+                        class="metodo-badge {% if preview.metodo == 'csv' %}bg-success text-white{% else %}bg-primary text-white{% endif %}">
+                        {% if preview.metodo == 'csv' %}📄 Método CSV directo{% else %}🔑 Sheets API v4{% endif %}
+                    </span>
+                    <span class="text-muted" style="font-size:.83rem;line-height:2;">
+                        ID: <code>{{ preview.sheet_id|truncatechars:20 }}</code>
+                        {% if preview.gid != '0' %} · GID: {{ preview.gid }}{% endif %}
+                    </span>
+                </div>
+            </div>
+            <div class="col-auto d-flex gap-2 flex-wrap">
+                <a href="{% url 'conductores:hoja_publica_exportar_preview' %}" class="btn btn-sm"
+                    style="background:#217346;color:#fff;">
+                    <i class="bi bi-file-earmark-excel me-1"></i>Descargar Excel
+                </a>
+                <a href="{% url 'conductores:hoja_publica' %}" class="btn btn-sm btn-outline-secondary">
+                    <i class="bi bi-arrow-left me-1"></i>Cambiar hoja
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4">
+    <div class="col-lg-8">
+
+        <!-- MAPEO DE COLUMNAS -->
+        <div class="card mb-4">
+            <div class="card-body p-4">
+                <h6 style="font-family:'Raleway',sans-serif;font-weight:700;color:var(--primary);">
+                    <i class="bi bi-diagram-3 me-2"></i>Mapeo de columnas detectado
+                </h6>
+                <div class="d-flex flex-wrap gap-2 mb-3">
+                    {% for field in mapped_fields %}
+                    <span class="field-chip chip-ok"><i class="bi bi-check-circle-fill"></i> {{ field|title }}</span>
+                    {% endfor %}
+                </div>
+                {% if unmapped_headers %}
+                <div>
+                    <small class="text-muted fw-bold">Columnas no reconocidas (se ignorarán):</small>
+                    <div class="d-flex flex-wrap gap-1 mt-1">
+                        {% for h in unmapped_headers %}
+                        <span class="field-chip chip-extra"><i class="bi bi-dash-circle"></i> {{ h }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- TABLA PREVISUALIZACIÓN -->
+        <div class="card mb-4">
+            <div class="card-header-custom d-flex justify-content-between align-items-center">
+                <span style="font-family:'Raleway',sans-serif;font-weight:700;">
+                    <i class="bi bi-eye me-2"></i>Primeras {{ muestra|length }} filas
+                </span>
+                <small>de {{ preview.total }} total</small>
+            </div>
+            <div class="table-responsive">
+                <table class="table table-sm preview-table align-middle mb-0">
+                    <thead>
+                        <tr>
+                            {% for h in preview.headers %}
+                            <th>{{ h }}</th>
+                            {% endfor %}
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for conductor in muestra %}
+                        <tr>
+                            {% for h in preview.headers %}
+                            <td title="{{ conductor.raw_data|default:''|dictget:h|default:'' }}">
+                                {{ conductor.raw_data|default:''|dictget:h|default:'—' }}
+                            </td>
+                            {% endfor %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% if preview.total > 5 %}
+            <div class="p-3 text-center text-muted" style="font-size:.83rem;">
+                … y {{ preview.total|add:"-5" }} fila(s) más que se importarán al confirmar
+            </div>
+            {% endif %}
+        </div>
+
+    </div>
+
+    <!-- PANEL DERECHO: CONFIRMAR -->
+    <div class="col-lg-4">
+        <div class="card" style="position:sticky;top:20px;">
+            <div class="card-body p-4">
+                <h6 style="font-family:'Raleway',sans-serif;font-weight:700;color:var(--primary);">
+                    <i class="bi bi-database-fill-add me-2"></i>Guardar en base de datos
+                </h6>
+
+                <form method="post" action="{% url 'conductores:hoja_publica_importar' %}">
+                    {% csrf_token %}
+
+                    <!-- Campos ocultos -->
+                    {{ confirm_form.sheet_id }}
+                    {{ confirm_form.gid }}
+                    {{ confirm_form.api_key }}
+                    {{ confirm_form.rango }}
+                    {{ confirm_form.metodo }}
+
+                    <!-- Modo merge -->
+                    <div class="mb-4">
+                        <label class="form-label fw-bold" style="font-size:.85rem;">
+                            Duplicados detectados:
+                        </label>
+                        {% for radio in confirm_form.modo_merge %}
+                        <div class="form-check mb-2">
+                            {{ radio.tag }}
+                            <label class="form-check-label" for="{{ radio.id_for_label }}" style="font-size:.85rem;">
+                                {{ radio.choice_label }}
+                            </label>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 mb-2">
+                        <i class="bi bi-database-fill-add me-2"></i>
+                        Confirmar importación ({{ preview.total }} registros)
+                    </button>
+                </form>
+
+                <a href="{% url 'conductores:hoja_publica' %}" class="btn btn-outline-secondary w-100">
+                    <i class="bi bi-x-circle me-1"></i>Cancelar
+                </a>
+
+                <hr>
+                <div class="text-muted" style="font-size:.78rem;">
+                    <i class="bi bi-info-circle me-1"></i>
+                    Al confirmar, los datos se re-extraen frescos de la hoja y se guardan en SQLite local.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
