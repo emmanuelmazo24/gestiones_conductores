@@ -26,6 +26,10 @@
           <button class="btn btn-accent" data-bs-toggle="modal" data-bs-target="#modalGrupo">
             <i class="bi bi-people-fill me-2"></i>Cambiar grupo
           </button>
+          <!-- ASISTENCIA -->
+          <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modalAsistencia">
+            <i class="bi bi-calendar-check-fill me-2"></i>Asistencia
+          </button>
           <form method="post" action="{% url 'conductores:eliminar' conductor.pk %}"
                 onsubmit="return confirm('¿Eliminar a {{ conductor.nombre_completo }}?')">
             {% csrf_token %}
@@ -67,6 +71,26 @@
           <div class="col-12">
             <div class="text-muted" style="font-size:.78rem;font-weight:700;text-transform:uppercase;">Dirección</div>
             <div>{{ conductor.direccion }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mb-3">
+      <div class="card-body p-4">
+        <div class="section-title">Asistencia</div>
+        <div class="row g-3 text-center">
+          <div class="col-4">
+            <div class="text-muted" style="font-size:.78rem;font-weight:700;text-transform:uppercase;">Día 1</div>
+            <div>{% if conductor.asistencia_dia_1 %}<i class="bi bi-check-circle-fill text-success fs-4"></i>{% else %}<i class="bi bi-x-circle-fill text-danger fs-4"></i>{% endif %}</div>
+          </div>
+          <div class="col-4">
+            <div class="text-muted" style="font-size:.78rem;font-weight:700;text-transform:uppercase;">Día 2</div>
+            <div>{% if conductor.asistencia_dia_2 %}<i class="bi bi-check-circle-fill text-success fs-4"></i>{% else %}<i class="bi bi-x-circle-fill text-danger fs-4"></i>{% endif %}</div>
+          </div>
+          <div class="col-4">
+            <div class="text-muted" style="font-size:.78rem;font-weight:700;text-transform:uppercase;">Día 3</div>
+            <div>{% if conductor.asistencia_dia_3 %}<i class="bi bi-check-circle-fill text-success fs-4"></i>{% else %}<i class="bi bi-x-circle-fill text-danger fs-4"></i>{% endif %}</div>
           </div>
         </div>
       </div>
@@ -136,6 +160,44 @@
           <button class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
           <button type="submit" class="btn btn-primary">
             <i class="bi bi-save-fill me-1"></i>Guardar
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL ASISTENCIA -->
+<div class="modal fade" id="modalAsistencia" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content" style="border-radius:16px;border:none;">
+      <div class="modal-header bg-success" style="border-radius:16px 16px 0 0;">
+        <h5 class="modal-title text-white" style="font-family:'Raleway',sans-serif;font-weight:700;">
+          <i class="bi bi-calendar-check-fill me-2"></i>Actualizar Asistencia
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <form method="post" action="{% url 'conductores:actualizar_asistencia' conductor.pk %}">
+        {% csrf_token %}
+        <div class="modal-body p-4">
+          <p class="text-muted mb-3">Marca los días de asistencia para <strong>{{ conductor.nombre_completo }}</strong>:</p>
+          <div class="form-check form-switch mb-3" style="font-size: 1.1rem;">
+            <input class="form-check-input" type="checkbox" name="asistencia_dia_1" id="asistencia_dia_1" {% if conductor.asistencia_dia_1 %}checked{% endif %}>
+            <label class="form-check-label ms-2" for="asistencia_dia_1">Día 1</label>
+          </div>
+          <div class="form-check form-switch mb-3" style="font-size: 1.1rem;">
+            <input class="form-check-input" type="checkbox" name="asistencia_dia_2" id="asistencia_dia_2" {% if conductor.asistencia_dia_2 %}checked{% endif %}>
+            <label class="form-check-label ms-2" for="asistencia_dia_2">Día 2</label>
+          </div>
+          <div class="form-check form-switch mb-3" style="font-size: 1.1rem;">
+            <input class="form-check-input" type="checkbox" name="asistencia_dia_3" id="asistencia_dia_3" {% if conductor.asistencia_dia_3 %}checked{% endif %}>
+            <label class="form-check-label ms-2" for="asistencia_dia_3">Día 3</label>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-success">
+            <i class="bi bi-save-fill me-1"></i>Guardar Asistencia
           </button>
         </div>
       </form>

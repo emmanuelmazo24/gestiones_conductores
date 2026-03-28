@@ -14,6 +14,7 @@ class ConductorForm(forms.ModelForm):
             'nombre', 'apellido', 'cedula', 'edad', 'direccion',
             'nombre_padres', 'numero_contacto_adulto',
             'comunidad', 'dificultades', 'fecha_recepcion', 'grupo',
+            'asistencia_dia_1', 'asistencia_dia_2', 'asistencia_dia_3',
         ]
         widgets = {
             'nombre':                 forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nombre'}),
@@ -27,6 +28,9 @@ class ConductorForm(forms.ModelForm):
             'dificultades':           forms.Textarea(attrs={'class': 'form-control', 'rows': 3,
                                         'placeholder': 'Describir dificultades o necesidades especiales...'}),
             'grupo':                  forms.Select(attrs={'class': 'form-select'}),
+            'asistencia_dia_1':       forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'asistencia_dia_2':       forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'asistencia_dia_3':       forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
 
 

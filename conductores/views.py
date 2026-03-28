@@ -105,6 +105,17 @@ def cambiar_grupo(request, pk):
     return redirect('conductores:detalle', pk=pk)
 
 
+@require_POST
+def actualizar_asistencia(request, pk):
+    conductor = get_object_or_404(Conductor, pk=pk)
+    conductor.asistencia_dia_1 = request.POST.get('asistencia_dia_1') == 'on'
+    conductor.asistencia_dia_2 = request.POST.get('asistencia_dia_2') == 'on'
+    conductor.asistencia_dia_3 = request.POST.get('asistencia_dia_3') == 'on'
+    conductor.save(update_fields=['asistencia_dia_1', 'asistencia_dia_2', 'asistencia_dia_3', 'actualizado_en'])
+    messages.success(request, f'Asistencia actualizada para {conductor.nombre_completo}.')
+    return redirect('conductores:detalle', pk=pk)
+
+
 # ── EXPORTAR EXCEL LOCAL ──────────────────────────────────────────────────────
 
 def exportar_excel(request):

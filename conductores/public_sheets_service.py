@@ -118,7 +118,7 @@ def _row_to_dict(row: list, mapping: dict, raw_headers: list) -> dict:
         if idx is None or idx >= len(row):
             return ''
         return str(row[idx]).strip()
-
+        
     return {
         'nombre':                 get('nombre'),
         'apellido':               get('apellido'),
@@ -129,7 +129,7 @@ def _row_to_dict(row: list, mapping: dict, raw_headers: list) -> dict:
         'numero_contacto_adulto': get('numero_contacto_adulto'),
         'comunidad':              get('comunidad'),
         'dificultades':           get('dificultades'),
-        'fecha_recepcion':        (_parse_date(get('fecha_recepcion')) if get('fecha_recepcion') else date.today()).isoformat(),
+        'fecha_recepcion':        (_parse_date(get('fecha_recepcion').split()[0]) if get('fecha_recepcion') else date.today()).isoformat(),
         'grupo':                  _parse_grupo(get('grupo')) if get('grupo') else 'sin_asignar',
         # Columnas originales para la previsualización
         'raw_data': {h: (row[i] if i < len(row) else '') for i, h in enumerate(raw_headers)},

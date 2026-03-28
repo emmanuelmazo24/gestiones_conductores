@@ -43,6 +43,11 @@ class Conductor(models.Model):
     creado_en              = models.DateTimeField('Creado en',      auto_now_add=True)
     actualizado_en         = models.DateTimeField('Actualizado en', auto_now=True)
 
+    # Asistencia
+    asistencia_dia_1       = models.BooleanField('Asistencia día 1', default=False)
+    asistencia_dia_2       = models.BooleanField('Asistencia día 2', default=False)
+    asistencia_dia_3       = models.BooleanField('Asistencia día 3', default=False)
+
     class Meta:
         verbose_name        = 'Conductor'
         verbose_name_plural = 'Conductores'
@@ -75,6 +80,9 @@ class Conductor(models.Model):
             self.fecha_recepcion.strftime('%d/%m/%Y') if self.fecha_recepcion else '',
             self.grupo_display,
             self.creado_en.strftime('%d/%m/%Y %H:%M') if self.creado_en else '',
+            self.asistencia_dia_1,
+            self.asistencia_dia_2,
+            self.asistencia_dia_3,
         ]
 
     @classmethod
@@ -83,6 +91,7 @@ class Conductor(models.Model):
             'ID', 'Nombre', 'Apellido', 'Cedula', 'Edad', 'Dirección',
             'Nombre Padres/Tutores', 'Contacto Adulto', 'Comunidad',
             'Dificultades', 'Fecha Recepción', 'Grupo', 'Registrado en',
+            'Asistencia día 1', 'Asistencia día 2', 'Asistencia día 3',
         ]
 
 

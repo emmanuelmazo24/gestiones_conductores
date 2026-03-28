@@ -12,6 +12,7 @@ urlpatterns = [
     path('<int:pk>/editar/',    views.editar,        name='editar'),
     path('<int:pk>/eliminar/',  views.eliminar,      name='eliminar'),
     path('<int:pk>/grupo/',     views.cambiar_grupo, name='cambiar_grupo'),
+    path('<int:pk>/asistencia/', views.actualizar_asistencia, name='actualizar_asistencia'),
 
     # Excel local
     path('exportar/excel/',     views.exportar_excel, name='exportar_excel'),

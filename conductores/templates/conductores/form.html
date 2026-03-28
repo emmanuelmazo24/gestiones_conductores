@@ -91,7 +91,26 @@
           </div>
         </div>
       </div>
-
+      <!-- ASISTENCIA -->
+      <div class="card mb-4">
+        <div class="card-body p-4">
+          <div class="section-title">Asistencia</div>
+          <div class="row">
+            <div class="col-md-4">
+              <label class="form-label">Asistencia día 1</label>
+              {{ form.asistencia_dia_1 }}
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Asistencia día 2</label>
+              {{ form.asistencia_dia_2 }}
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Asistencia día 3</label>
+              {{ form.asistencia_dia_3 }}
+            </div>
+          </div>
+        </div>
+      </div>
       <!-- ACTIONS -->
       <div class="d-flex gap-2 justify-content-end">
         <a href="{% if conductor %}{% url 'conductores:detalle' conductor.pk %}{% else %}{% url 'conductores:lista' %}{% endif %}"
