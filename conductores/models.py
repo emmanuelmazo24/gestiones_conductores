@@ -13,6 +13,7 @@ GRUPOS = [
     ('grupo_g',      'Beato Rolando Rivi'),
     ('grupo_h',      'Siervo de Dios Marcelo Câmara'),
     ('grupo_i',      'San Luis Gonzaga'),
+    ('grupo_j',      'Sierva de Dios Chiaria Corbella Petrillo'),
 ]
 
 

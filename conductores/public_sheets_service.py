@@ -77,7 +77,8 @@ GRUPOS_REVERSE = {
     'grupo f': 'grupo_f', 'grupo_f': 'grupo_f', 'f': 'grupo_f',
     'grupo g': 'grupo_g', 'grupo_g': 'grupo_g', 'g': 'grupo_g',
     'grupo h': 'grupo_h', 'grupo_h': 'grupo_h', 'h': 'grupo_h',
-    'grupo i': 'grupo_i', 'grupo_i': 'grupo_i', 'i': 'grupo_i',       
+    'grupo i': 'grupo_i', 'grupo_i': 'grupo_i', 'i': 'grupo_i',   
+    'grupo j': 'grupo_j', 'grupo_j': 'grupo_j', 'j': 'grupo_j',   
 }
 
 
