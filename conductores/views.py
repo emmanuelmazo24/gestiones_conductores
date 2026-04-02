@@ -48,6 +48,29 @@ def lista(request):
     return render(request, 'conductores/lista.html', context)
 
 
+def reporte_asistencia(request):
+    reporte = (
+        Conductor.objects.values('grupo')
+        .annotate(
+            total_dia_1=Count('id', filter=Q(asistencia_dia_1=True)),
+            total_dia_2=Count('id', filter=Q(asistencia_dia_2=True)),
+            total_dia_3=Count('id', filter=Q(asistencia_dia_3=True)),
+            total_conductores=Count('id')
+        )
+        .order_by('-total_conductores')
+    )
+    
+    grupos_dict = dict(GRUPOS)
+    for r in reporte:
+        r['grupo_display'] = grupos_dict.get(r['grupo'], r['grupo'])
+
+    return render(request, 'conductores/reporte_asistencia.html', {
+        'reporte': reporte,
+        'titulo': 'Reporte de Asistencia por Grupo'
+    })
+
+
+
 # ── ABM ───────────────────────────────────────────────────────────────────────
 
 def crear(request):

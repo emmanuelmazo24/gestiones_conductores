@@ -60,6 +60,9 @@
 
 <!-- EXPORT BUTTONS -->
 <div class="d-flex flex-wrap gap-2 mb-3">
+  <a href="{% url 'conductores:reporte_asistencia' %}" class="btn btn-sm btn-info text-white">
+    <i class="bi bi-bar-chart-fill me-1"></i>Reporte de Asistencia
+  </a>
   <a href="{% url 'conductores:exportar_excel' %}{% if request.GET.grupo %}?grupo={{ request.GET.grupo }}{% endif %}"
     class="btn btn-sm" style="background:#217346;color:#fff;">
     <i class="bi bi-file-earmark-excel-fill me-1"></i>Descargar Excel
