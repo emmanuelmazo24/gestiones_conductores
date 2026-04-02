@@ -64,8 +64,16 @@ def reporte_asistencia(request):
     for r in reporte:
         r['grupo_display'] = grupos_dict.get(r['grupo'], r['grupo'])
 
+    totales = {
+        'conductores': sum(r['total_conductores'] for r in reporte),
+        'dia_1': sum(r['total_dia_1'] for r in reporte),
+        'dia_2': sum(r['total_dia_2'] for r in reporte),
+        'dia_3': sum(r['total_dia_3'] for r in reporte),
+    }
+
     return render(request, 'conductores/reporte_asistencia.html', {
         'reporte': reporte,
+        'totales': totales,
         'titulo': 'Reporte de Asistencia por Grupo'
     })
 
